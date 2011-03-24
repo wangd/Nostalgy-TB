@@ -52,7 +52,7 @@
 
 
  <statusbar id="status-bar">
-  <hbox id="statusTextBox" insertbefore="statusText">
+  <hbox id="statusTextBox" insertbefore="statusText" crop="center" flex="1">
    <statusbarpanel insertbefore="statusText">
     <label id="statusbar-nostalgy-label" crop="center" flex="1"
            value="&nostalgy.memo;"/>

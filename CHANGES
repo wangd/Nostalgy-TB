@@ -1,3 +1,15 @@
+0.2.30
+  - Fix scrolling messages with Ctrl Up/Down.
+  - Integrate patch from Gilles Orsini to avoid problem with 'Tasks & mails' extension.
+
+0.2.29
+  - Fixes for TB 12.
+  - Remove the broken 'Send rules by email' features, replace it with 
+    Export/Import buttons.
+
+0.2.28
+  - Allow TB 9.
+
 0.2.27
   - Fix for TB 5.
 

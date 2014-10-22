@@ -308,16 +308,37 @@ function NostalgyCmd(lab,cmd,require_file) {
  nostalgy_folderBox.shell_completion = false;
  nostalgy_statusBar.hidden = false;
  nostalgy_folderBox.value = "";
+ nostalgy_folderBox.tabScrolling = !nostalgy_completion_options.tab_shell_completion;
 
  setTimeout(function() {
+   // For some unknown reason, doing nostalgyBox.focus immediatly
+   // sometimes does not work...
    nostalgy_folderBox.focus();
-   nostalgy_folderBox.processInput();
+   // Force search on the empty string (-> recent folders)
+   NostalgyShowRecentFoldersList();
  }, 0);
- // For some unknown reason, doing nostalgyBox.focus immediatly
- // sometimes does not work...
  return true;
 }
 
+function NostalgyShowRecentFoldersList() {
+  var listener = null;
+  var box = nostalgy_folderBox;
+  if (box.controller) // Toolkit
+    listener = box.controller.QueryInterface(Components.interfaces.nsIAutoCompleteObserver);
+  else { // XPFE
+    // box.mAutoCompleteObserver uses a flawed equality check so we have to replace it.
+    // Since we only use one autocompleter, its name is equal to the autocompletesearch attribute.
+    listener = {
+      onSearchResult: function(aSearch, aResult) {
+        box.processResults(box.getAttribute("autocompletesearch"), aResult);
+      }
+    };
+    // Reset internal state
+    box.currentSearchString = "";
+  }
+
+  NostalgyAutocompleteComponent().startSearch("", box.searchParam, null, listener);
+}
 
 function NostalgyCreateTag(name) {
  var tagService =
@@ -347,7 +368,7 @@ function NostalgyRunCommand() {
   }
   else {
     if (s.substr(0,1) == ":") {
-        if ((s == ":") || (s == "::")) return
+      if ((s == ":") || (s == "::")) return;
       var name;
       if (s.substr(s.length-1,1) == ":")
          name = s.substr(1,s.length - 2);
@@ -691,7 +712,7 @@ function NostalgySearchSenderQuickFilter() {
             new_state.states[field] = true;
         }
         return new_state;
-    }
+    };
 
     var current = JSON.stringify(state);
 
